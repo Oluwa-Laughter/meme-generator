@@ -1,8 +1,50 @@
-# React + Vite
+# Meme Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a simple web app that generates random memes using the Imgflip API. You can customize the text on the memes and download them as images.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Generate random memes from Imgflip
+- Customize the top and bottom text
+- Download memes as images
+
+## Screenshots
+
+![](screenshots/screenshot1.png)
+![](screenshots/screenshot2.png)
+![](screenshots/screenshot3.png)
+
+## Technologies Used
+
+- React
+- useState and useEffect hooks
+- Imgflip API
+- JavaScript Canvas API
+
+## Installation
+
+1. Clone the repository
+
+```bash
+git clone https://github.com/Oluwa-Laughter/meme-generator.git
+```
+
+2. Install dependencies
+
+```bash
+npm install
+```
+
+3. Start the development server
+
+```bash
+npm start
+```
+
+4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+## Project Author:
+
+- Website - [Isaac Makinde](https://github.com/Oluwa-Laughter)
+- Twitter - [LAUGHTER](https://www.x.com/isaacmakinde_)
+- LinkedIn - [Isaac Makinde](https://www.linkedin.com/in/isaacmakinde)
