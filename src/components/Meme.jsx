@@ -1,34 +1,107 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Meme() {
-  const [topText, setTopText] = useState("");
-  const [bottomText, setBottomText] = useState("");
+  const [meme, setMeme] = useState({
+    topText: "",
+    bottomText: "",
+    randomImg: "https://i.imgflip.com/1g8my4.jpg",
+  });
+
+  const [memesArray, setMemesArray] = useState([]);
+
+  useEffect(() => {
+    async function fetchMemes() {
+      try {
+        const res = await fetch("https://api.imgflip.com/get_memes");
+        const data = await res.json();
+        const memesData = data.data.memes;
+        setMemesArray(memesData);
+      } catch (error) {
+        alert(`${error} Failed to fetch memes `);
+      }
+    }
+    fetchMemes();
+  }, []);
+
+  const canvasRef = useRef(null);
+  const downloadLinkRef = useRef(null);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setMeme((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const handleGetMeme = () => {
+    const randomIndex = Math.floor(Math.random(0, 100) * memesArray.length);
+    const url = memesArray[randomIndex].url;
+    setMeme((prevState) => ({ ...prevState, randomImg: url }));
+  };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    image.src = meme.randomImg;
+    image.onload = () => {
+      canvas.width = image.width;
+      canvas.height = image.height;
+      ctx.drawImage(image, 0, 0);
+      ctx.font = "30px Impact";
+      ctx.fillStyle = "white";
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 2;
+      ctx.textAlign = "center";
+      ctx.fillText(meme.topText, canvas.width / 2, 40);
+      ctx.strokeText(meme.topText, canvas.width / 2, 40);
+      ctx.fillText(meme.bottomText, canvas.width / 2, canvas.height - 20);
+      ctx.strokeText(meme.bottomText, canvas.width / 2, canvas.height - 20);
+      downloadLinkRef.current.href = canvas.toDataURL("image/png");
+    };
+  }, [meme]);
   return (
     <main>
-      <form action="">
+      <section className="form">
         <div>
-          <label htmlFor="top-text">Top text</label>
+          <label htmlFor="topText">Top text</label>
           <input
             type="text"
-            id="top-text"
-            name="top-text"
-            value={topText}
-            onChange={(e) => setTopText(e.target.value)}
+            id="topText"
+            name="topText"
+            value={meme.topText}
+            onChange={(e) => handleChange(e)}
           />
         </div>
 
         <div>
-          <label htmlFor="bottom-text">Bottom text</label>
+          <label htmlFor="bottomText">Bottom text</label>
           <input
             type="text"
-            id="bottom-text"
-            name="bottom-text"
-            value={bottomText}
-            onChange={(e) => setBottomText(e.target.value)}
+            id="bottomText"
+            name="bottomText"
+            value={meme.bottomText}
+            onChange={(e) => handleChange(e)}
           />
         </div>
-        <button type="submit">Get a new meme image 🖼️</button>
-      </form>
+        <button type="submit" onClick={handleGetMeme}>
+          Get a new meme image 🖼️
+        </button>
+      </section>
+
+      <section className="meme">
+        <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
+        <img src={meme.randomImg} alt="" />
+        <h2 className="top-text">{meme.topText}</h2>
+        <h2 className="bottom-text">{meme.bottomText}</h2>
+      </section>
+
+      <button className="dowmload-btn">
+        <img src="/download-icon.svg" alt="download-meme" />
+        <a ref={downloadLinkRef} download="meme.png" className="download-icon">
+          Download Meme
+        </a>
+      </button>
     </main>
   );
 }
