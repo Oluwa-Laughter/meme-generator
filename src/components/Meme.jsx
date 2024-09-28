@@ -8,6 +8,8 @@ export default function Meme() {
   });
 
   const [memesArray, setMemesArray] = useState([]);
+  const [topTextBg, setTopTextBg] = useState("transparent");
+  const [bottomTextBg, setBottomTextBg] = useState("transparent");
 
   useEffect(() => {
     async function fetchMemes() {
@@ -29,6 +31,11 @@ export default function Meme() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setMeme((prevState) => ({ ...prevState, [name]: value }));
+    if (name === "topText") {
+      setTopTextBg("#000");
+    } else if (name === "bottomText") {
+      setBottomTextBg("#000");
+    } else return;
   };
 
   const handleGetMeme = () => {
@@ -92,8 +99,12 @@ export default function Meme() {
       <section className="meme">
         <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
         <img src={meme.randomImg} alt="" />
-        <h2 className="top-text">{meme.topText}</h2>
-        <h2 className="bottom-text">{meme.bottomText}</h2>
+        <h2 className="top-text" style={{ backgroundColor: topTextBg }}>
+          {meme.topText}
+        </h2>
+        <h2 className="bottom-text" style={{ backgroundColor: bottomTextBg }}>
+          {meme.bottomText}
+        </h2>
       </section>
 
       <button className="dowmload-btn">
